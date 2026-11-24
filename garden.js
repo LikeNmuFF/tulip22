@@ -115,5 +115,14 @@ $('bloom').addEventListener('click',bloom);
 $('replay').addEventListener('click',()=>{bloom();window.scrollTo({top:0,behavior:motion.matches?'instant':'smooth'});});
 $('pause').addEventListener('click',()=>setPaused(!paused));
 $('music').addEventListener('click',toggleMusic);
+const memoriesVideo=$('memories-video');
+$('memories-play').addEventListener('click',async()=>{
+  memoriesVideo.currentTime=0;
+  try{await memoriesVideo.play();$('memories-status').textContent='Our memories are playing.';}
+  catch{$('memories-status').textContent='Tap play on the video to watch our memories.';}
+  if(!musicOn&&!loadingPlayer)toggleMusic();
+});
+memoriesVideo.addEventListener('ended',()=>{$('memories-status').textContent='One more time? Press Play our memories.';});
+memoriesVideo.addEventListener('error',()=>{$('memories-status').textContent='The film could not load here. Please try refreshing the page.';});
 $('skip').addEventListener('click',()=>{setPaused(false);animations.forEach(a=>a.finish());revealLetter();$('letter').focus({preventScroll:true});$('letter').scrollIntoView({behavior:motion.matches?'instant':'smooth'});});
 motion.addEventListener('change',()=>{if(state==='growing'&&motion.matches){animations.forEach(a=>a.finish());revealLetter();}});
