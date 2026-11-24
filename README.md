@@ -2,7 +2,7 @@
 
 A static, animated tulip garden for our 22nd monthsary. Tap **Let love bloom** to grow nine pink tulips and reveal a Taglish love note. The photo film is the main feature below the garden.
 
-**Our memories** is a 2:22 portrait photo montage of 17 personal photos, with a monthsary ending card. The video is currently silent and stored at `dist/memories/our-memories.mp4`.
+**Our memories** is a portrait photo montage of 17 personal photos, with a monthsary ending card. It uses the user-supplied `hbd.mpeg` soundtrack and is stored at `dist/memories/our-memories.mp4`. There is no separate music player.
 
 Built with HTML, CSS, JavaScript, and SVG. No framework, build step, API keys, backend, or accounts are required. The complete website is in `dist/`.
 
