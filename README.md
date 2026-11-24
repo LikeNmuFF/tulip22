@@ -2,6 +2,8 @@
 
 A static, animated tulip garden for our 22nd monthsary. Tap **Let love bloom** to grow nine pink tulips and reveal a Taglish love note. The **Our song** section plays The Walters’ “I Love You So” through its official YouTube player, with a direct YouTube link if embedded playback is unavailable.
 
+**Our memories** is a 2:22 portrait photo montage of 17 personal photos, with a monthsary ending card. The video has no embedded music; **Play our memories** starts the film and requests the official song player. Browser autoplay settings may require pressing play in the YouTube player as well. The montage is stored at `dist/memories/our-memories.mp4`.
+
 Built with HTML, CSS, JavaScript, and SVG. No framework, build step, API keys, backend, or accounts are required. The complete website is in `dist/`.
 
 ## Preview locally
