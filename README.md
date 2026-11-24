@@ -16,7 +16,20 @@ Open the local URL printed by the command. You can also open `dist/index.html` d
 
 ## GitHub Pages
 
-In repository **Settings → Pages**, select **GitHub Actions** as the publishing source. The workflow in `.github/workflows/pages.yml` deploys `dist/` when changes are pushed to `main`, and can also be run manually from the Actions tab.
+Live website: https://likenmuff.github.io/tulip22/
+
+GitHub Pages publishes the root of the `gh-pages` branch. The `main` branch contains the source website in `dist/`, documentation, and a workflow that checks JavaScript syntax.
+
+After editing the site, commit the changes and publish the static files:
+
+```sh
+git add dist
+git commit -m "Update the garden"
+git push origin main
+git subtree push --prefix dist origin gh-pages
+```
+
+GitHub automatically deploys changes pushed to `gh-pages`. In repository **Settings → Pages**, keep **Deploy from a branch**, **gh-pages**, and **/(root)** selected. The subtree command exports only the website files, with no build step.
 
 All asset links are relative, so the site works under a repository subpath. When using a different domain, update the absolute `og:url` and `og:image` values in `dist/index.html` for shared-link previews.
 
