@@ -2,9 +2,6 @@
 const $ = id => document.getElementById(id);
 const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let state = 'invitation', paused = false, animations = [];
-let player, playerReady = false, musicOn = false, musicRequested = false;
-let loadingPlayer = false, usingNativePlayer = false, playerTimeout;
-const songId = 'HZX7MB_m13M';
 const flowers = [
   [235,615, .78,-23,1.1],[752,615,.75,23,.7],[330,630,.9,-15,.45],
   [665,640,.91,15,1.35],[420,625,1.05,-8,.15],[576,635,1.04,8,.85],
@@ -35,70 +32,6 @@ function revealLetter(){
   $('skip').hidden=true;setCaption('A little more in love. Every single day.');
   $('replay').disabled=false;$('flowers').setAttribute('data-state','bloomed');
 }
-function updateMusicButton(){
-  $('music').setAttribute('aria-pressed',String(musicOn));
-  $('music-label').textContent=musicOn?'Pause our song':'Play our song';
-  $('music-icon').setAttribute('d',musicOn?'M7 5h3v14H7Zm7 0h3v14h-3Z':'m9 5 10 7-10 7Z');
-}
-function musicStatus(text){$('music-status').textContent=text;}
-function showNativePlayer(){
-  if(usingNativePlayer)return;
-  usingNativePlayer=true;loadingPlayer=false;clearTimeout(playerTimeout);
-  if(player?.destroy)player.destroy();
-  const frame=document.createElement('iframe');frame.id='song-player';
-  frame.src=`https://www.youtube-nocookie.com/embed/${songId}?playsinline=1&rel=0`;
-  frame.title='I Love You So — The Walters, official music video';
-  frame.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
-  frame.referrerPolicy='strict-origin-when-cross-origin';frame.allowFullscreen=true;
-  document.querySelector('.video-shell').replaceChildren(frame);
-  $('music').disabled=true;$('music').removeAttribute('aria-busy');
-  $('music-label').textContent='Use the video controls';
-  musicStatus('Tap play in the video. If it won’t load, listen on YouTube below.');
-}
-function createPlayer(){
-  if(usingNativePlayer||player)return;
-  player=new window.YT.Player('song-player',{
-    host:'https://www.youtube-nocookie.com',videoId:songId,
-    playerVars:{playsinline:1,rel:0,origin:location.origin},
-    events:{
-      onReady(event){
-        clearTimeout(playerTimeout);playerReady=true;loadingPlayer=false;
-        $('music').disabled=false;$('music').removeAttribute('aria-busy');
-        const frame=event.target.getIframe();frame.title='I Love You So — The Walters, official music video';
-        frame.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
-        event.target.setVolume(65);updateMusicButton();
-        musicStatus('Press play here or in the video to listen.');
-        if(musicRequested)event.target.playVideo();
-      },
-      onStateChange(event){
-        musicOn=event.data===1;updateMusicButton();
-        if(event.data===1)musicStatus('Playing I Love You So · The Walters');
-        else if(event.data===2)musicStatus('Paused. Your garden is still here.');
-        else if(event.data===0)musicStatus('One more listen? Press play whenever you like.');
-        else if(event.data===3)musicStatus('Your song is buffering…');
-      },
-      onAutoplayBlocked(){musicRequested=false;musicOn=false;updateMusicButton();musicStatus('Tap play in the video to start your song.');},
-      onError(){clearTimeout(playerTimeout);musicRequested=false;musicOn=false;updateMusicButton();$('music').disabled=true;$('music').removeAttribute('aria-busy');$('music-label').textContent='Listen on YouTube below';musicStatus('This video can’t play here. Open the YouTube link to hear your song.');}
-    }
-  });
-}
-function toggleMusic(){
-  if(usingNativePlayer)return;
-  if(playerReady){
-    if(musicOn){musicRequested=false;player.pauseVideo();}
-    else{musicRequested=true;player.playVideo();}
-    return;
-  }
-  if(loadingPlayer)return;
-  loadingPlayer=true;musicRequested=true;$('music').disabled=true;
-  $('music').setAttribute('aria-busy','true');$('music-label').textContent='Loading our song…';
-  musicStatus('Getting your song ready…');
-  playerTimeout=setTimeout(showNativePlayer,12000);
-  if(window.YT?.Player){createPlayer();return;}
-  window.onYouTubeIframeAPIReady=createPlayer;
-  const script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';
-  script.async=true;script.onerror=showNativePlayer;document.head.append(script);
-}
 function setPaused(value){paused=value;document.body.classList.toggle('paused',paused);animations.forEach(a=>{if(a.playState!=='finished')paused?a.pause():a.play();});$('pause').textContent=paused?'Resume animation':'Pause animation';$('pause').setAttribute('aria-pressed',String(paused));}
 function bloom(){
   animations.forEach(a=>a.cancel());animations=[];state='growing';setPaused(false);document.body.classList.add('started');$('invitation').hidden=true;$('letter').hidden=true;$('read-letter').hidden=true;$('skip').hidden=false;$('controls').hidden=false;$('replay').disabled=true;setCaption('Like our love, something beautiful is growing…');$('flowers').setAttribute('data-state','growing');
@@ -114,13 +47,11 @@ function bloom(){
 $('bloom').addEventListener('click',bloom);
 $('replay').addEventListener('click',()=>{bloom();window.scrollTo({top:0,behavior:motion.matches?'instant':'smooth'});});
 $('pause').addEventListener('click',()=>setPaused(!paused));
-$('music').addEventListener('click',toggleMusic);
 const memoriesVideo=$('memories-video');
 $('memories-play').addEventListener('click',async()=>{
   memoriesVideo.currentTime=0;
   try{await memoriesVideo.play();$('memories-status').textContent='Our memories are playing.';}
   catch{$('memories-status').textContent='Tap play on the video to watch our memories.';}
-  if(!musicOn&&!loadingPlayer)toggleMusic();
 });
 memoriesVideo.addEventListener('ended',()=>{$('memories-status').textContent='One more time? Press Play our memories.';});
 memoriesVideo.addEventListener('error',()=>{$('memories-status').textContent='The film could not load here. Please try refreshing the page.';});
