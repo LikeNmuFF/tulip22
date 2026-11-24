@@ -1,6 +1,6 @@
 # A Little Garden for Lablab
 
-A static, animated tulip garden for our 22nd monthsary. Tap **Let love bloom** to grow nine pink tulips, start a gentle music-box melody, and reveal a Taglish love note.
+A static, animated tulip garden for our 22nd monthsary. Tap **Let love bloom** to grow nine pink tulips and reveal a Taglish love note. The **Our song** section plays The Walters’ “I Love You So” through its official YouTube player, with a direct YouTube link if embedded playback is unavailable.
 
 Built with HTML, CSS, JavaScript, and SVG. No framework, build step, API keys, backend, or accounts are required. The complete website is in `dist/`.
 
@@ -12,7 +12,7 @@ From this directory, run:
 npx --yes serve dist
 ```
 
-Open the local URL printed by the command. You can also open `dist/index.html` directly. Google Fonts requires internet access; the site includes local system-font fallbacks. Music starts after a user gesture.
+Open the local URL printed by the command. The garden also works when opening `dist/index.html` directly, but YouTube playback needs an HTTP origin and internet access. Display fonts are self-hosted under `dist/fonts/`, with their open license included. YouTube is loaded only after tapping **Play our song**. Browser autoplay restrictions may require another tap in the visible video player.
 
 ## GitHub Pages
 
@@ -37,7 +37,7 @@ All asset links are relative, so the site works under a repository subpath. When
 
 - Edit the greeting and Taglish letter in `dist/index.html`.
 - Adjust the palette and responsive styles in `dist/style.css`.
-- Change flower placement, animation, and the original synthesized melody in `dist/garden.js`.
+- Change flower placement and animation in `dist/garden.js`. The `songId` constant selects the official YouTube video.
 - Replace `dist/social-preview.png` when the visual design changes.
 
 The site includes replay, pause, and music controls; keyboard focus indicators; and a reduced-motion presentation. It has been checked at desktop, 375px and 320px phone widths, and landscape sizes.
